@@ -36,7 +36,7 @@ class App extends Component {
     const {expression} = this.state;
 
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1,backgroundColor:'black'}}>
         <View style={styles.container}>
           <Text style={styles.text}>{expression}</Text>
         </View>
@@ -138,13 +138,14 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'black',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
     alignItems: 'flex-end',
   },
   number: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor:'black',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -154,18 +155,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#AABBCC',
     padding: 10,
-    borderWidth: 5,
+    borderWidth: 8,
     borderRadius: 20,
-    margin: 5,
+    borderColor:'white',
+    margin: 3,
   },
   buttonText: {
     fontSize: 30,
     color: 'black',
+    fontWeight: 'bold'
   },
   text: {
-    fontSize: 50,
-    color: 'black',
-    alignItems:'flex-end'
+    backgroundColor:'black',
+    fontSize: 60,
+    color: 'white',
+    alignItems:'flex-end',
+    fontWeight: 'bold'
   },
 });
 
