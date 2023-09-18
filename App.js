@@ -1,53 +1,134 @@
-import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 
 class App extends Component {
   state = {
     count: 0,
-    textColor: '#000000', // Initial text color
+    expression: '', // Expression to evaluate
   };
 
-  onPress = () => {
-    const randomColor = this.generateRandomColor();
-    this.setState((prevState) => ({
-      count: prevState.count + 1,
-      textColor: randomColor,
-    }));
-  };
+  handleButtonPress = value => {
+    const {expression} = this.state;
 
-  onClear = () => {
-    this.setState({
-      count: 0,
-      textColor: '#000000', // Reset text color to black
-    });
-  };
-
-  generateRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+    if (value === '=') {
+      // Evaluate the expression
+      try {
+        const result = eval(expression);
+        this.setState({expression: String(result)});
+      } catch (error) {
+        this.setState({expression: 'Error'});
+      }
+    } else if (value === 'C') {
+      // Clear the expression
+      this.setState({expression: ''});
+    } 
+    else if (value === 'DEL') {
+      // Delete the last word
+      const updatedExpression = expression.slice(0, -1);
+      this.setState({ expression: updatedExpression });
+    }else {
+      // Append the value to the expression
+      this.setState({expression: expression + value});
     }
-    return color;
   };
 
   render() {
-    const { count, textColor } = this.state;
+    const {expression} = this.state;
 
     return (
-      <View style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.buttonA} onPress={this.onPress}>
-            <Text style={styles.buttonText}>Click me</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={this.onClear}>
-            <Text style={styles.buttonText}>Clear</Text>
-          </TouchableOpacity>
+      <View style={{flex: 1}}>
+        <View style={styles.container}>
+          <Text style={styles.text}>{expression}</Text>
         </View>
-        <View>
-          <Text style={[styles.text, { color: textColor }]}>
-            You clicked {count} times
-          </Text>
+        <View style={styles.number}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('7')}>
+              <Text style={styles.buttonText}>7</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('8')}>
+              <Text style={styles.buttonText}>8</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('9')}>
+              <Text style={styles.buttonText}>9</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('*')}>
+              <Text style={styles.buttonText}>*</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('4')}>
+              <Text style={styles.buttonText}>4</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('5')}>
+              <Text style={styles.buttonText}>5</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('6')}>
+              <Text style={styles.buttonText}>6</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('-')}>
+              <Text style={styles.buttonText}>-</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('1')}>
+              <Text style={styles.buttonText}>1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('2')}>
+              <Text style={styles.buttonText}>2</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('3')}>
+              <Text style={styles.buttonText}>3</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('+')}>
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('C')}>
+              <Text style={styles.buttonText}>C</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('DEL')}>
+              <Text style={styles.buttonText}>DEL</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('0')}>
+              <Text style={styles.buttonText}>0</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => this.handleButtonPress('=')}>
+              <Text style={styles.buttonText}>=</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -58,35 +139,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    alignItems: 'flex-end',
+  },
+  number: {
+    flex: 1,
+    justifyContent: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
-    borderWidth: 5,
-    borderRadius: 20,
-  },
-  buttonA: {
-    right: 0,
-    alignItems: 'center',
-    backgroundColor: '#AABBCC',
-    padding: 10,
-    borderTopLeftRadius: 15,
-    borderBottomLeftRadius: 15,
   },
   button: {
+    flex: 1,
     alignItems: 'center',
     backgroundColor: '#AABBCC',
     padding: 10,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
+    borderWidth: 5,
+    borderRadius: 20,
+    margin: 5,
   },
   buttonText: {
     fontSize: 30,
     color: 'black',
   },
   text: {
-    fontSize: 30,
+    fontSize: 50,
     color: 'black',
+    alignItems:'flex-end'
   },
 });
 
