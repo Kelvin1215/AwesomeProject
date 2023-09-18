@@ -3,7 +3,6 @@ import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 
 class App extends Component {
   state = {
-    count: 0,
     expression: '', // Expression to evaluate
   };
 
