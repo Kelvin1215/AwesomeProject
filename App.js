@@ -1,175 +1,87 @@
-import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import React, {Component, useState} from 'react';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  ScrollView,
+  Image,
+  TextInput,
+  Button,
+  Alert,
+} from 'react-native';
 
-class App extends Component {
-  state = {
-    expression: '', // Expression to evaluate
-  };
-
-  handleButtonPress = value => {
-    const {expression} = this.state;
-
-    if (value === '=') {
-      // Evaluate the expression
-      try {
-        const result = eval(expression);
-        this.setState({expression: String(result)});
-      } catch (error) {
-        this.setState({expression: 'Error'});
-      }
-    } else if (value === 'C') {
-      // Clear the expression
-      this.setState({expression: ''});
-    } 
-    else if (value === 'DEL') {
-      // Delete the last word
-      const updatedExpression = expression.slice(0, -1);
-      this.setState({ expression: updatedExpression });
-    }else {
-      // Append the value to the expression
-      this.setState({expression: expression + value});
+const App = () => {
+  const [image, setImage] = useState(
+    'https://cdn.ferrari.com/cms/network/media/img/resize/649947ec9148ac002333bf48-ferrari-sf90-xx-stradale-intro-desk-new-2',
+  );
+  onPress = value => {
+    if (value === 'SF90XX') {
+      setImage(
+        'https://cdn.ferrari.com/cms/network/media/img/resize/649947ec9148ac002333bf48-ferrari-sf90-xx-stradale-intro-desk-new-2',
+      );
+    } else if(value === 'GT3 RS'){
+      setImage(
+        'https://pics.porsche.com/rtt/iris?COSY-EU-100-1713c6eK12UC31P3T5JOCU%25hjdmiTDDmvMXlHWguCuq6Q44RtRHo9ZAaDjYu5P3I7tGW3rNbZJNKXv9Z7KcQQ%25yFN5tFAsXrw4r3wo0qnqZr8MCnR4i84tV2YN2OmNyW1QGWgCWKMUuyO8xz60KBAhQ52DdgfN9300DynvAT89ErfIjCzaDrx5108uJWRaVWCAxFH2OEo8VP3TexLeuqXWIJeFgf%25oWjrHwo0nq8J',
+      );
+    }else{
+      setImage(
+        'https://mclaren.scene7.com/is/image/mclaren/Mclaren-P1-GTR-everything-tile-1200x1200:crop-4x3?wid=1920&hei=1440'
+      )
     }
   };
-
-  render() {
-    const {expression} = this.state;
-
-    return (
-      <View style={{flex: 1,backgroundColor:'black'}}>
-        <View style={styles.container}>
-          <Text style={styles.text}>{expression}</Text>
-        </View>
-        <View style={styles.number}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('7')}>
-              <Text style={styles.buttonText}>7</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('8')}>
-              <Text style={styles.buttonText}>8</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('9')}>
-              <Text style={styles.buttonText}>9</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('*')}>
-              <Text style={styles.buttonText}>*</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('4')}>
-              <Text style={styles.buttonText}>4</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('5')}>
-              <Text style={styles.buttonText}>5</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('6')}>
-              <Text style={styles.buttonText}>6</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('-')}>
-              <Text style={styles.buttonText}>-</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('1')}>
-              <Text style={styles.buttonText}>1</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('2')}>
-              <Text style={styles.buttonText}>2</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('3')}>
-              <Text style={styles.buttonText}>3</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('+')}>
-              <Text style={styles.buttonText}>+</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('C')}>
-              <Text style={styles.buttonText}>C</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('DEL')}>
-              <Text style={styles.buttonText}>DEL</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('0')}>
-              <Text style={styles.buttonText}>0</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.handleButtonPress('=')}>
-              <Text style={styles.buttonText}>=</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <Image style={styles.image} source={{uri: image}} />
       </View>
-    );
-  }
-}
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => console.log('Ferrari SF90 XX') + onPress('SF90XX')}>
+          <Text style={styles.text}>SF90 XX</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onPress('GT3 RS') + console.log('Porche 911 GT3 RS')}>
+          <Text style={styles.text}>GT3 RS</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onPress('P1 GTR') + console.log('McLaren P1 GTR')}>
+          <Text style={styles.text}>P1 GTR</Text> 
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor:'black',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  number: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor:'black',
-  },
   buttonContainer: {
-    flexDirection: 'row',
+    borderWidth: 5,
+    borderColor: 'black',
+    borderRadius: 5,
+    margin: 3,
+    // Other styles for the button container
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#AABBCC',
-    padding: 10,
-    borderWidth: 8,
-    borderRadius: 20,
-    borderColor:'white',
-    margin: 3,
-  },
-  buttonText: {
-    fontSize: 30,
-    color: 'black',
-    fontWeight: 'bold'
+    backgroundColor: 'gray',
   },
   text: {
-    backgroundColor:'black',
-    fontSize: 60,
-    color: 'white',
-    alignItems:'flex-end',
-    fontWeight: 'bold'
+    fontSize: 80,
+    color: 'red',
+  },
+  image: {
+    width: 192 * 2.05,
+    height: 160 * 2.05,
   },
 });
 
