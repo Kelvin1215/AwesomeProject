@@ -31,6 +31,7 @@ const App = () => {
     }
   };
   return (
+    
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
         <Image style={styles.image} source={{uri: image}} />
@@ -84,5 +85,26 @@ const styles = StyleSheet.create({
     height: 160 * 2.05,
   },
 });
-
 export default App;
+/*import React from 'react';
+import {StyleSheet, Text, SafeAreaView} from 'react-native';
+
+const App = () => {
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.text}>Page content</Text>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  text: {
+    fontSize: 50,
+    fontWeight: '500',
+  },
+});
+
+export default App;*/
