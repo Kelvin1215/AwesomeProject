@@ -37,9 +37,24 @@ function App() {
   };
 
   const handleDeleteTodo = id => {
-    Alert.alert('Finished',(todoList.find(todo => todo.id === id)).text)
-    setTodoList(todoList.filter(todo => todo.id !== id));
-    
+    Alert.alert('Are you sure delete', null, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Delete'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () =>
+          Alert.alert('Finished', todoList.find(todo => todo.id === id).text, [
+            {
+              text: 'OK',
+              onPress: () =>
+                setTodoList(todoList.filter(todo => todo.id !== id)),
+            },
+          ]),
+      },
+    ]);
   };
 
   const renderTodoItem = ({item}) => (
@@ -108,7 +123,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0
+    marginTop: StatusBar.currentHeight || 0,
   },
   text: {
     fontSize: 50,
