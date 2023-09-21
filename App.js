@@ -37,7 +37,9 @@ function App() {
   };
 
   const handleDeleteTodo = id => {
+    Alert.alert('Finished',(todoList.find(todo => todo.id === id)).text)
     setTodoList(todoList.filter(todo => todo.id !== id));
+    
   };
 
   const renderTodoItem = ({item}) => (
@@ -179,6 +181,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   todoItem: {
+    //flex:1,
     padding: 10,
     borderBottomWidth: 2,
     borderBottomColor: 'black',
