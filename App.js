@@ -1,110 +1,196 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
-  TouchableOpacity,
   Text,
   View,
-  ScrollView,
-  Image,
   TextInput,
-  Button,
+  Modal,
+  SafeAreaView,
+  TouchableOpacity,
   Alert,
+  FlatList,
+  StatusBar,
 } from 'react-native';
 
-const App = () => {
-  const [image, setImage] = useState(
-    'https://cdn.ferrari.com/cms/network/media/img/resize/649947ec9148ac002333bf48-ferrari-sf90-xx-stradale-intro-desk-new-2',
-  );
-  onPress = value => {
-    if (value === 'SF90XX') {
-      setImage(
-        'https://cdn.ferrari.com/cms/network/media/img/resize/649947ec9148ac002333bf48-ferrari-sf90-xx-stradale-intro-desk-new-2',
-      );
-    } else if(value === 'GT3 RS'){
-      setImage(
-        'https://pics.porsche.com/rtt/iris?COSY-EU-100-1713c6eK12UC31P3T5JOCU%25hjdmiTDDmvMXlHWguCuq6Q44RtRHo9ZAaDjYu5P3I7tGW3rNbZJNKXv9Z7KcQQ%25yFN5tFAsXrw4r3wo0qnqZr8MCnR4i84tV2YN2OmNyW1QGWgCWKMUuyO8xz60KBAhQ52DdgfN9300DynvAT89ErfIjCzaDrx5108uJWRaVWCAxFH2OEo8VP3TexLeuqXWIJeFgf%25oWjrHwo0nq8J',
-      );
-    }else{
-      setImage(
-        'https://mclaren.scene7.com/is/image/mclaren/Mclaren-P1-GTR-everything-tile-1200x1200:crop-4x3?wid=1920&hei=1440'
-      )
+function App() {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [todoList, setTodoList] = useState([]);
+
+  const changeText = text => {
+    setInputValue(text);
+  };
+
+  const handleAddTodo = () => {
+    if (inputValue.trim() !== '') {
+      const newTodo = {
+        id: Math.random().toString(),
+        text: inputValue.trim(),
+      };
+      setTodoList([...todoList, newTodo]);
+      setInputValue('');
+      setModalVisible(false);
+      Alert.alert('Reminder', 'Todo added successfully');
+    } else {
+      Alert.alert('Error', 'Please enter a todo');
     }
   };
-  return (
-    
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Image style={styles.image} source={{uri: image}} />
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => console.log('Ferrari SF90 XX') + onPress('SF90XX')}>
-          <Text style={styles.text}>SF90 XX</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onPress('GT3 RS') + console.log('Porche 911 GT3 RS')}>
-          <Text style={styles.text}>GT3 RS</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onPress('P1 GTR') + console.log('McLaren P1 GTR')}>
-          <Text style={styles.text}>P1 GTR</Text> 
-        </TouchableOpacity>
-      </View>
-    </View>
+
+  const handleDeleteTodo = id => {
+    setTodoList(todoList.filter(todo => todo.id !== id));
+  };
+
+  const renderTodoItem = ({item}) => (
+    <TouchableOpacity
+      style={styles.todoItem}
+      onPress={() => handleDeleteTodo(item.id)}>
+      <Text style={styles.todoText}>{item.text}</Text>
+    </TouchableOpacity>
   );
-};
 
-const styles = StyleSheet.create({
-  buttonContainer: {
-    borderWidth: 5,
-    borderColor: 'black',
-    borderRadius: 5,
-    margin: 3,
-    // Other styles for the button container
-  },
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: 'gray',
-  },
-  text: {
-    fontSize: 80,
-    color: 'red',
-  },
-  image: {
-    width: 192 * 2.05,
-    height: 160 * 2.05,
-  },
-});
-export default App;
-/*import React from 'react';
-import {StyleSheet, Text, SafeAreaView} from 'react-native';
-
-const App = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Page content</Text>
+      <View style={styles.header}>
+        <Text style={styles.text}>To Do List</Text>
+      </View>
+      <View style={styles.mainBody}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalbtText}>Need To Do</Text>
+              <TextInput
+                style={styles.edtext}
+                value={inputValue}
+                onChangeText={changeText}
+              />
+              <View style={styles.rowOfModalbt}>
+                <TouchableOpacity
+                  style={[styles.button, styles.btClear]}
+                  onPress={() => setInputValue('')}>
+                  <Text style={styles.modalbtText}>Clear</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.button, styles.btConfirm]}
+                  onPress={handleAddTodo}>
+                  <Text style={styles.modalbtText}>Confirm</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setModalVisible(true)}>
+          <Text style={styles.bttext}>+ Add +</Text>
+        </TouchableOpacity>
+        <View style={styles.todoBody}>
+          <FlatList
+            data={todoList}
+            renderItem={renderTodoItem}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.todoList}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: StatusBar.currentHeight || 0
   },
   text: {
     fontSize: 50,
-    fontWeight: '500',
+    color: 'black',
+  },
+  header: {
+    backgroundColor: '#1e90ff',
+    alignItems: 'center',
+    borderWidth: 5,
+    borderColor: 'black',
+    flexShrink: 0,
+  },
+  mainBody: {
+    flex: 1,
+  },
+  button: {
+    alignItems: 'center',
+    marginTop: 10,
+    borderWidth: 3,
+    backgroundColor: 'grey',
+    borderColor: 'black',
+    padding: 10,
+  },
+  bttext: {
+    fontSize: 35,
+    color: 'black',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 15,
+    elevation: 5,
+  },
+  modalbtText: {
+    fontSize: 25,
+    color: 'black',
+  },
+  edtext: {
+    fontSize: 20,
+    borderBottomWidth: 2,
+    color: 'black',
+  },
+  btClear: {
+    alignItems: 'flex-start',
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  btConfirm: {
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    alignItems: 'flex-end',
+  },
+  rowOfModalbt: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  //To Do
+  todoList: {
+    flexGrow: 1,
+    width: '100%',
+    paddingBottom: 50,
+  },
+  todoItem: {
+    padding: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: 'black',
+  },
+  todoText: {
+    fontSize: 25,
+    color: 'grey',
+  },
+  todoBody: {
+    padding: 15,
+    alignItems: 'flex-start',
   },
 });
 
-export default App;*/
+export default App;
