@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   StatusBar,
+  TouchableWithoutFeedback,
 } from 'react-native';
 
 function App() {
@@ -36,11 +37,20 @@ function App() {
     }
   };
 
-  const handleDeleteTodo = id => {
-    Alert.alert('Are you sure delete', null, [
+  const handleTodo = id => {
+    Alert.alert('What you want to do', null, [
+      {
+        text: 'Modify',
+        onPress: () => [
+          setModalVisible(true),
+          setInputValue(todoList.find(todo => todo.id === id).text),
+          setTodoList(todoList.filter(todo => todo.id !== id)),
+          console.log('Modified')
+        ],
+      },
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Delete'),
+        onPress: () => console.log('Cancel'),
         style: 'cancel',
       },
       {
@@ -60,7 +70,7 @@ function App() {
   const renderTodoItem = ({item}) => (
     <TouchableOpacity
       style={styles.todoItem}
-      onPress={() => handleDeleteTodo(item.id)}>
+      onPress={() => handleTodo(item.id)}>
       <Text style={styles.todoText}>{item.text}</Text>
     </TouchableOpacity>
   );
@@ -78,30 +88,34 @@ function App() {
           onRequestClose={() => {
             setModalVisible(!modalVisible);
           }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalbtText}>Need To Do</Text>
-              <TextInput
-                style={styles.edtext}
-                value={inputValue}
-                onChangeText={changeText}
-              />
-              <View style={styles.rowOfModalbt}>
-                <TouchableOpacity
-                  style={[styles.button, styles.btClear]}
-                  onPress={() => setInputValue('')}>
-                  <Text style={styles.modalbtText}>Clear</Text>
-                </TouchableOpacity>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalbtText}>Need To Do</Text>
+                <TextInput
+                  style={styles.edtext}
+                  value={inputValue}
+                  onChangeText={changeText}
+                  placeholder="The Thing you need to do"
+                />
+                <View style={styles.rowOfModalbt}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.btClear]}
+                    onPress={() => setInputValue('')}>
+                    <Text style={styles.modalbtText}>Clear</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={[styles.button, styles.btConfirm]}
-                  onPress={handleAddTodo}>
-                  <Text style={styles.modalbtText}>Confirm</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.btConfirm]}
+                    onPress={handleAddTodo}>
+                    <Text style={styles.modalbtText}>Confirm</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
+          </TouchableWithoutFeedback>
         </Modal>
+
         <TouchableOpacity
           style={styles.button}
           onPress={() => setModalVisible(true)}>
