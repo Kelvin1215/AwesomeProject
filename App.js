@@ -11,6 +11,7 @@ import {
   FlatList,
   StatusBar,
   TouchableWithoutFeedback,
+  ToastAndroid,
 } from 'react-native';
 
 function App() {
@@ -31,9 +32,9 @@ function App() {
       setTodoList([...todoList, newTodo]);
       setInputValue('');
       setModalVisible(false);
-      Alert.alert('Reminder', 'Todo added successfully');
+      ToastAndroid.show('Todo added successfully', 2500);
     } else {
-      Alert.alert('Error', 'Please enter a todo');
+      ToastAndroid.show('Error: Please enter a todo', 2500);
     }
   };
 
@@ -45,7 +46,7 @@ function App() {
           setModalVisible(true),
           setInputValue(todoList.find(todo => todo.id === id).text),
           setTodoList(todoList.filter(todo => todo.id !== id)),
-          console.log('Modified')
+          console.log('Modified'),
         ],
       },
       {
@@ -54,15 +55,12 @@ function App() {
         style: 'cancel',
       },
       {
-        text: 'OK',
-        onPress: () =>
-          Alert.alert('Finished', todoList.find(todo => todo.id === id).text, [
-            {
-              text: 'OK',
-              onPress: () =>
-                setTodoList(todoList.filter(todo => todo.id !== id)),
-            },
-          ]),
+        text: 'Delete',
+        onPress: () => [
+          ToastAndroid.show('Delete', 1500),
+          setTodoList(todoList.filter(todo => todo.id !== id)),
+          console.log('Deleted'),
+        ],
       },
     ]);
   };
@@ -76,61 +74,63 @@ function App() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.text}>To Do List</Text>
-      </View>
-      <View style={styles.mainBody}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}>
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalbtText}>Need To Do</Text>
-                <TextInput
-                  style={styles.edtext}
-                  value={inputValue}
-                  onChangeText={changeText}
-                  placeholder="The Thing you need to do"
-                />
-                <View style={styles.rowOfModalbt}>
-                  <TouchableOpacity
-                    style={[styles.button, styles.btClear]}
-                    onPress={() => setInputValue('')}>
-                    <Text style={styles.modalbtText}>Clear</Text>
-                  </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={[styles.button, styles.btConfirm]}
-                    onPress={handleAddTodo}>
-                    <Text style={styles.modalbtText}>Confirm</Text>
-                  </TouchableOpacity>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.text}>To Do List</Text>
+        </View>
+        <View style={styles.mainBody}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <TouchableWithoutFeedback onPress={() => [setModalVisible(false)]}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.modalbtText}>Need To Do</Text>
+                  <TextInput
+                    style={styles.edtext}
+                    value={inputValue}
+                    onChangeText={changeText}
+                    placeholder="Enter the todo"
+                  />
+                  <View style={styles.rowOfModalbt}>
+                    <TouchableOpacity
+                      style={[styles.button, styles.btClear]}
+                      onPress={() => setInputValue('')}>
+                      <Text style={styles.modalbtText}>Clear</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={[styles.button, styles.btConfirm]}
+                      onPress={handleAddTodo}>
+                      <Text style={styles.modalbtText}>Confirm</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+            </TouchableWithoutFeedback>
+          </Modal>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setModalVisible(true)}>
-          <Text style={styles.bttext}>+ Add +</Text>
-        </TouchableOpacity>
-        <View style={styles.todoBody}>
-          <FlatList
-            data={todoList}
-            renderItem={renderTodoItem}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.todoList}
-          />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setModalVisible(true)}>
+            <Text style={styles.bttext}>+ Add +</Text>
+          </TouchableOpacity>
+          <View style={styles.todoBody}>
+            <FlatList
+              data={todoList}
+              renderItem={renderTodoItem}
+              keyExtractor={item => item.id}
+              contentContainerStyle={styles.todoList}
+            />
+          </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+
   );
 }
 
